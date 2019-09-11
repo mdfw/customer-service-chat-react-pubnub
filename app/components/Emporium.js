@@ -1,9 +1,8 @@
 const React = require('react');
-const WhiteTelephone = require('./WhiteTelephone');
+const PubNubBroker = require('./PubNubBroker');
 
 /* the main page for the index route of this app */
 class Emporium extends React.Component {
-
   
   render() {
     let search = window.location.search;
@@ -15,8 +14,13 @@ class Emporium extends React.Component {
       <h1>Duck Emporium</h1>
 
       <p>The largest rubber ducky selection on the internet.</p>
+        
+      <p>We have green ducks! We have brown ducks!</p>
+        
+      <p>To get our special price, you have to ask our assistant.</p>
 
-      <WhiteTelephone />
+      <PubNubBroker isAgentWindow={false} 
+        />
       </div>)
   }
 }

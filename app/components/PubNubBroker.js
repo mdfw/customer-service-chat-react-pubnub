@@ -1,18 +1,20 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Launcher = require('./Launcher');
+const ChatWindow = require('./ChatWindow');
 const PubNubReact = require('pubnub-react');
 
 let keys = require('../../.data/pubnubkeys.json');
 
+/*
+PubNubBroker is a wrapper around the Launcher component that 
+coordinates connection with the PubNub network. All messages that are sent to
+and received from PubNub flow through this component and are passed 
+to Launcher which then flows to ChatWindow for display.
 
-class WhiteTelephone extends React.Component {
-  //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
-  uidv4() {
-    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-    )
-  }
+*/
+
+class PubNubBroker extends React.Component {
 
   constructor(props) {
     super(props);
@@ -61,11 +63,6 @@ class WhiteTelephone extends React.Component {
     this.setState({ messageList: newMessageList })
   }
   
-  componentWillUnmount() {
-    this.pubnub.unsubscribe({
-      channels: this.customChannel
-    });
-  }
 
   componentDidUpdate() {
     if (this.state.isOpen && !this.state.connectedToPubNub) {
@@ -73,15 +70,22 @@ class WhiteTelephone extends React.Component {
     }
   }
   
+  //https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+  uidv4() {
+    return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+      (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    )
+  }
+
   connectToPubNub() {
     if (this.state.connectedToPubNub) {
       return;
     }; 
     this.uuid = this.uidv4();
-    this.customChannel = "lobby." + this.uuid;
+    this.customChannel = "chatbot." + this.uuid;
     console.log("Custom channel: " + this.customChannel)
     this.pubnub = new PubNubReact({
-      publishKey: keys.PUBNUBPUB,
+      publishKey: keys.PUBNUBPUB, // See pubnubkeys-template.json
       subscribeKey: keys.PUBNUBSUB,
       uuid: this.uuid
     });
@@ -123,17 +127,36 @@ class WhiteTelephone extends React.Component {
   
   sendFirstMessage() {
     this.publishToPubNub({
-      "type": "serverNotice",
+      "type": "clientToServer",
       "notice": "firstMessage",
       "sendingChannel": this.customChannel
     });
   }
+  
+  componentWillUnmount() {
+    this.pubnub.unsubscribe({
+      channels: this.customChannel
+    });
+  }
+
   
   render() {
     let classList = [
       "sc-chat-window",
       (this.props.isOpen ? "opened" : "closed")
     ]
+    if (this.props.isAgentWindow) {
+      return (
+       <ChatWindow
+        agentProfile={{
+          teamName: 'Duck Emporium Agent',
+          imageUrl: 'https://cdn.glitch.com/36a1e4e9-2b09-43ea-8db4-b5b7259cbb0a%2Fduckemporium-thumb.svg?v=1567023369176'
+        }}
+          messageList={this.state.messageList}
+          onUserInputSubmit={this.onUserInputSubmit}
+        />
+        )
+    }
     return (
       <Launcher
         agentProfile={{
@@ -150,8 +173,8 @@ class WhiteTelephone extends React.Component {
   }
 }
 
-WhiteTelephone.propTypes = {
+PubNubBroker.propTypes = {
 
 }
 
-module.exports = WhiteTelephone;
+module.exports = PubNubBroker;

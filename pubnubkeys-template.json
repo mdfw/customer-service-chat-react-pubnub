@@ -1,7 +1,7 @@
 {
   "//1": "Get keys from PubNub and put them in the options below",
-  "//2": "Copy this file into /.data/pubnubkeys.json",
-  "//3": "Note the period before data - that's important",
+  "//2": "Copy this file into '/.data/pubnubkeys.json' ",
+  "//3": "Note the period before the data folder - that's important",
   "PUBNUBPUB":"Your publish key here",
   "PUBNUBSUB":"Your subscribe key here"
 }
