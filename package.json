@@ -1,0 +1,41 @@
+{
+  "//1": "describes your app and its dependencies",
+  "//2": "https://docs.npmjs.com/files/package.json",
+  "//3": "updating this file will download and update your packages",
+  "name": "customer-service-chat",
+  "version": "0.0.1",
+  "description": "A front end for a fictional customer service chat engine powered by PubNub",
+  "main": "server.js",
+  "files": [
+    "css"
+  ],
+  "scripts": {
+    "build": "webpack",
+    "start": "webpack && node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.4",
+    "jsx-loader": "^0.13.2",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0",
+    "webpack": "^4.35.0",
+    "webpack-cli": "^3.3.5",
+    "lodash": "^4.17.15",
+    "prop-types": "15.7.2",
+    "emoji-js": "^3.4.1",
+    "pubnub": "^4.25.1",
+    "pubnub-react": "^1.3.1"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": ""
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "pubnub",
+    "express"
+  ]
+}
